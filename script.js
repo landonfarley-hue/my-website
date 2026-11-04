@@ -1,4 +1,12 @@
 // Landon Farley Real Estate — site scripts
+
+/* ============ CONTACT FORM SETUP (one-time) ============
+   1. Go to https://web3forms.com and click "Create your Access Key".
+   2. Enter LandonFarley@kw.com. They email you a key (it looks like a long string of letters and numbers).
+   3. Paste it between the quotation marks below, replacing PASTE-YOUR-ACCESS-KEY-HERE. Commit the change.
+   From then on, every form submission lands in your inbox. Visitors never leave your site. */
+var WEB3FORMS_KEY = "PASTE-YOUR-ACCESS-KEY-HERE";
+
 (function () {
   // Mobile menu
   var btn = document.querySelector('.menu-btn');
@@ -27,23 +35,60 @@
     items.forEach(function (el) { el.classList.add('in'); });
   }
 
-  // Forms: opens the visitor's email app with the message filled in (no sign-up needed).
-  document.querySelectorAll('form[data-mailto]').forEach(function (form) {
+  // Forms: submit in the page (no email app), delivered to your inbox via Web3Forms.
+  document.querySelectorAll('form[data-form]').forEach(function (form) {
+    var status = form.querySelector('.form-status');
+    var submit = form.querySelector('button[type="submit"]');
+    var label = submit ? submit.textContent : '';
+
+    function show(msg, ok) {
+      status.textContent = msg;
+      status.className = 'form-status ' + (ok ? 'ok' : 'err');
+      status.hidden = false;
+    }
+
     form.addEventListener('submit', function (ev) {
       ev.preventDefault();
-      var lines = [];
+      status.hidden = true;
+
+      var hp = form.querySelector('.hp');
+      if (hp && hp.checked) return; // spam bot
+
+      if (WEB3FORMS_KEY.indexOf('PASTE') === 0) {
+        show('This form is almost ready. In the meantime, please call or text (605) 251-3116.', false);
+        return;
+      }
+
+      var data = { access_key: WEB3FORMS_KEY, subject: form.getAttribute('data-subject') || 'Website inquiry', from_name: 'Landon Farley Website' };
       Array.prototype.forEach.call(form.elements, function (el) {
-        if (!el.name || !el.value) return;
-        var label = el.getAttribute('data-label') || el.name;
-        lines.push(label + ': ' + el.value);
+        if (el.name && el.value && el.type !== 'checkbox' && el.type !== 'submit') data[el.name] = el.value;
       });
-      var subject = form.getAttribute('data-subject') || 'Website inquiry';
-      var href = 'mailto:' + form.getAttribute('data-mailto') +
-        '?subject=' + encodeURIComponent(subject) +
-        '&body=' + encodeURIComponent(lines.join('\n'));
-      var t = form.querySelector('.thanks');
-      if (t) t.style.display = 'block';
-      window.location.href = href;
+
+      submit.disabled = true;
+      submit.textContent = 'Sending…';
+
+      fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(data)
+      })
+        .then(function (r) { return r.json(); })
+        .then(function (json) {
+          if (json && json.success) {
+            form.reset();
+            form.classList.add('sent');
+            show('Thank you! Your message was sent. I’ll be in touch very soon.', true);
+          } else {
+            throw new Error('send failed');
+          }
+        })
+        .catch(function () {
+          show('Sorry, that didn’t go through. Please call or text (605) 251-3116 and we’ll get you taken care of.', false);
+        })
+        .then(function () {
+          submit.disabled = false;
+          submit.textContent = label;
+        });
     });
   });
 
