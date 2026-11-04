@@ -5,7 +5,7 @@
    2. Enter LandonFarley@kw.com. They email you a key (it looks like a long string of letters and numbers).
    3. Paste it between the quotation marks below, replacing PASTE-YOUR-ACCESS-KEY-HERE. Commit the change.
    From then on, every form submission lands in your inbox. Visitors never leave your site. */
-var WEB3FORMS_KEY = "PASTE-YOUR-ACCESS-KEY-HERE";
+var WEB3FORMS_KEY = "54ef5727-9d0a-4a08-8fc3-3c4fa1a31e29";
 
 (function () {
   // Mobile menu
