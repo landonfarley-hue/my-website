@@ -299,3 +299,21 @@ textarea{min-height:130px;resize:vertical}
 .rate-table tbody th{font-weight:500}
 .rate-table td{font-family:var(--serif-display);font-size:1.2rem;white-space:nowrap}
 .rate-table tr.hl th,.rate-table tr.hl td{background:#F2F5FA;color:var(--gold-deep);font-weight:600}
+
+/* ---------- email signup + rent vs buy ---------- */
+.subscribe{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+.sub-copy p{margin-top:16px;max-width:46ch;color:var(--ink-soft)}
+@media(max-width:860px){.subscribe{grid-template-columns:1fr;gap:28px}}
+.calc-group{font-family:var(--sans);font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-deep);margin-top:22px;padding-bottom:6px;border-bottom:1px solid var(--sand)}
+.calc-group:first-child{margin-top:0}
+.rvb-verdict{font-family:var(--serif-display);font-size:clamp(1.6rem,3.4vw,2.1rem);color:var(--gold-deep);line-height:1.2;margin:10px 0 8px}
+.rvb-be{font-size:1.1rem;color:var(--ink-soft);margin-bottom:14px;min-height:1.4em}
+.rvb-details{margin:6px 0 10px;font-size:1.05rem}
+.rvb-details summary{cursor:pointer;color:var(--gold-deep);font-family:var(--sans);font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;padding:6px 0}
+.rvb-table-wrap{margin:14px 0 4px;overflow-x:auto}
+.rvb-table{width:100%;border-collapse:collapse;font-size:1rem}
+.rvb-table caption{caption-side:top;text-align:left;font-size:.95rem;color:var(--ink-soft);padding-bottom:6px}
+.rvb-table th,.rvb-table td{padding:8px 6px;border-bottom:1px solid var(--sand);text-align:right;white-space:nowrap}
+.rvb-table th:first-child,.rvb-table td:first-child{text-align:left}
+.rvb-table thead th{font-family:var(--sans);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-deep);font-weight:500}
+.rvb-table td.win{color:var(--gold-deep);font-weight:600}

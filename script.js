@@ -54,6 +54,13 @@ var WEB3FORMS_KEY = "54ef5727-9d0a-4a08-8fc3-3c4fa1a31e29";
       var hp = form.querySelector('.hp');
       if (hp && hp.checked) return; // spam bot
 
+      var missing = Array.prototype.filter.call(form.querySelectorAll('[required]'), function (el) { return !el.value.trim(); });
+      if (missing.length) {
+        show('Please fill in the required fields.', false);
+        missing[0].focus();
+        return;
+      }
+
       if (WEB3FORMS_KEY.indexOf('PASTE') === 0) {
         show('This form is almost ready. In the meantime, please call or text (605) 251-3116.', false);
         return;
@@ -77,7 +84,7 @@ var WEB3FORMS_KEY = "54ef5727-9d0a-4a08-8fc3-3c4fa1a31e29";
           if (json && json.success) {
             form.reset();
             form.classList.add('sent');
-            show('Thank you! Your message was sent. I’ll be in touch very soon.', true);
+            show(form.getAttribute('data-success') || 'Thank you! Your message was sent. I’ll be in touch very soon.', true);
           } else {
             throw new Error('send failed');
           }
@@ -172,6 +179,90 @@ var WEB3FORMS_KEY = "54ef5727-9d0a-4a08-8fc3-3c4fa1a31e29";
     ['term', 'rate', 'tax', 'ins', 'hoa'].forEach(function (n) {
       f(n).addEventListener('input', calc);
       f(n).addEventListener('change', calc);
+    });
+    calc();
+  });
+
+
+  // Rent vs. buy calculator
+  document.querySelectorAll('[data-rvb]').forEach(function (c) {
+    var f = function (n) { return c.querySelector('[name="' + n + '"]'); };
+    var out = function (n) { return c.querySelector('[data-out="' + n + '"]'); };
+    var money = function (v) { return (v < 0 ? '-' : '') + '$' + Math.round(Math.abs(v)).toLocaleString('en-US'); };
+    var num = function (el) { var v = parseFloat(el.value); return isFinite(v) && v > 0 ? v : 0; };
+
+    function model() {
+      var price = num(f('price')), dpct = Math.min(num(f('downpct')), 100);
+      var rate = num(f('rate')) / 1200, term = parseInt(f('term').value, 10) || 30, n = term * 12;
+      var taxr = num(f('tax')) / 100, ins = num(f('ins')), maint = num(f('maint')) / 100;
+      var closing = num(f('closing')) / 100, sell = num(f('sell')) / 100;
+      var rent0 = num(f('rent')), rg = num(f('rentgrow')) / 100;
+      var ap = num(f('apprec')) / 100, ret = num(f('ret')) / 100;
+      var loan = price * (1 - dpct / 100);
+      var pi = loan === 0 ? 0 : (rate === 0 ? loan / n : loan * rate / (1 - Math.pow(1 + rate, -n)));
+      var upfront = price * dpct / 100 + price * closing;
+      var pmiOn = dpct < 20, bal = loan, cumBuy = 0, cumRent = 0, rows = [], own1 = 0;
+      for (var m = 1; m <= 360; m++) {
+        var y = Math.floor((m - 1) / 12);
+        var val = price * Math.pow(1 + ap, y);
+        var pmi = (pmiOn && bal > price * 0.8) ? loan * 0.005 / 12 : 0;
+        var pay = 0;
+        if (m <= n) {
+          var intr = bal * rate, prin = Math.min(pi - intr, bal);
+          bal = Math.max(bal - prin, 0); pay = pi;
+        }
+        var own = pay + pmi + val * taxr / 12 + ins / 12 * Math.pow(1 + ap, y) + val * maint / 12;
+        if (m === 1) own1 = own;
+        cumBuy += own;
+        cumRent += rent0 * Math.pow(1 + rg, y);
+        if (m % 12 === 0) {
+          var yr = m / 12;
+          var proceeds = price * Math.pow(1 + ap, yr) * (1 - sell) - bal;
+          var opp = upfront * (Math.pow(1 + ret, yr) - 1);
+          rows.push({ yr: yr, buy: upfront + cumBuy - proceeds + opp, rent: cumRent, upfront: upfront, paid: cumBuy, proceeds: proceeds, opp: opp });
+        }
+      }
+      return { price: price, rows: rows, own1: own1, rent1: rent0 };
+    }
+
+    function calc() {
+      var yrs = Math.min(Math.max(Math.round(num(f('years'))) || 7, 1), 30);
+      var mdl = model();
+      out('yrs').textContent = yrs;
+      if (mdl.price <= 0) {
+        ['buy', 'rent', 'own1', 'rent1', 'upfront', 'paid', 'proceeds', 'opp'].forEach(function (k) { out(k).textContent = '—'; });
+        out('verdict').textContent = 'Enter a home price to compare.';
+        out('be').textContent = ''; out('rows').innerHTML = '';
+        return;
+      }
+      var r = mdl.rows[yrs - 1];
+      out('buy').textContent = money(r.buy);
+      out('rent').textContent = money(r.rent);
+      out('own1').textContent = money(mdl.own1);
+      out('rent1').textContent = money(mdl.rent1);
+      out('upfront').textContent = money(r.upfront);
+      out('paid').textContent = money(r.paid);
+      out('proceeds').textContent = money(r.proceeds);
+      out('opp').textContent = money(r.opp);
+      var diff = r.rent - r.buy, base = Math.max(r.rent, 1);
+      if (Math.abs(diff) < base * 0.01) out('verdict').textContent = 'About even over ' + yrs + ' years';
+      else if (diff > 0) out('verdict').textContent = 'Buying costs about ' + money(diff) + ' less';
+      else out('verdict').textContent = 'Renting costs about ' + money(-diff) + ' less';
+
+      var lastWorse = 0;
+      mdl.rows.forEach(function (x) { if (x.buy >= x.rent) lastWorse = x.yr; });
+      out('be').textContent = lastWorse >= 30 ? 'With these numbers, buying does not catch up with renting within 30 years.'
+        : (lastWorse === 0 ? 'Buying costs less than renting from the first year.' : 'Break-even: buying starts costing less than renting in year ' + (lastWorse + 1) + '.');
+
+      out('rows').innerHTML = [1, 3, 5, 7, 10, 15, 30].map(function (y) {
+        var x = mdl.rows[y - 1], buyWins = x.buy < x.rent;
+        return '<tr><td>' + y + '</td><td>' + money(x.buy) + '</td><td>' + money(x.rent) + '</td><td class="win">' + (buyWins ? 'Buy' : 'Rent') + '</td></tr>';
+      }).join('');
+    }
+
+    c.querySelectorAll('input, select').forEach(function (el) {
+      el.addEventListener('input', calc);
+      el.addEventListener('change', calc);
     });
     calc();
   });
