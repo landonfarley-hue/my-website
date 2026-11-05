@@ -268,6 +268,23 @@ var WEB3FORMS_KEY = "54ef5727-9d0a-4a08-8fc3-3c4fa1a31e29";
   });
 
 
+  // Vendor helpers
+  function vEl(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text) e.textContent = text;
+    return e;
+  }
+  function vLink(href, text, external, cls) {
+    var a = vEl('a', cls || '', text);
+    a.href = href;
+    if (external) { a.target = '_blank'; a.rel = 'noopener'; }
+    return a;
+  }
+  function vSafe(u) { return /^https?:\/\//i.test(u || '') ? u : ''; }
+  function vSlug(v) { return v.slug || String(v.name || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, ''); }
+  function vStars(r) { var n = Math.max(0, Math.min(5, Math.round(r || 0))); return '★★★★★'.slice(0, n) + '☆☆☆☆☆'.slice(0, 5 - n); }
+
   // Vendor directory
   var vgrid = document.getElementById('vendor-grid');
   if (vgrid) {
@@ -279,19 +296,7 @@ var WEB3FORMS_KEY = "54ef5727-9d0a-4a08-8fc3-3c4fa1a31e29";
     var emptyEl = document.getElementById('vendor-empty');
     var active = '';
 
-    function el(tag, cls, text) {
-      var e = document.createElement(tag);
-      if (cls) e.className = cls;
-      if (text) e.textContent = text;
-      return e;
-    }
-    function link(href, text, external) {
-      var a = el('a', '', text);
-      a.href = href;
-      if (external) { a.target = '_blank'; a.rel = 'noopener'; }
-      return a;
-    }
-    function safeUrl(u) { return /^https?:\/\//i.test(u || '') ? u : ''; }
+    var el = vEl, link = function (h, t, x) { return vLink(h, t, x); }, safeUrl = vSafe;
 
     // Category chips + form dropdown
     function addChip(label, value) {
@@ -323,11 +328,13 @@ var WEB3FORMS_KEY = "54ef5727-9d0a-4a08-8fc3-3c4fa1a31e29";
       list.forEach(function (v) {
         var card = el('article', 'vendor');
         card.appendChild(el('span', 'tag', v.category));
-        card.appendChild(el('h3', '', v.name));
+        var h3 = el('h3', ''); h3.appendChild(vLink('vendor.html?v=' + encodeURIComponent(vSlug(v)), v.name)); card.appendChild(h3);
+        if (v.rating) card.appendChild(el('p', 'vrating', vStars(v.rating) + ' ' + Number(v.rating).toFixed(1) + (v.reviewCount ? ' \u00b7 ' + v.reviewCount + (v.ratingSource ? ' ' + v.ratingSource : '') + ' reviews' : '')));
         if (v.services) card.appendChild(el('p', '', v.services));
         if (v.area) card.appendChild(el('p', '', v.area));
         if (v.note) card.appendChild(el('p', 'vnote', v.note));
         var links = el('div', 'vlinks');
+        links.appendChild(vLink('vendor.html?v=' + encodeURIComponent(vSlug(v)), 'View Profile', false, 'vp'));
         if (v.phone) links.appendChild(link('tel:' + v.phone.replace(/[^0-9+]/g, ''), 'Call ' + v.phone));
         if (safeUrl(v.website)) links.appendChild(link(safeUrl(v.website), 'Website', true));
         if (v.email) links.appendChild(link('mailto:' + v.email, 'Email'));
@@ -360,6 +367,208 @@ var WEB3FORMS_KEY = "54ef5727-9d0a-4a08-8fc3-3c4fa1a31e29";
     });
     search.addEventListener('input', render);
     render();
+    var qs = new URLSearchParams(location.search), askCat = qs.get('ask'), askFor = qs.get('for');
+    if (askCat && sel) { sel.value = askCat; var m0 = document.getElementById('v-msg'); if (m0 && askFor && !m0.value) m0.value = 'I’d like a recommendation or more information about ' + askFor + '.'; }
+  }
+
+
+  // Vendor profile
+  var vprof = document.getElementById('vendor-profile');
+  if (vprof) {
+    var allV = window.VENDORS || [];
+    var vid = new URLSearchParams(location.search).get('v') || '';
+    var vd = allV.filter(function (x) { return vSlug(x) === vid; })[0];
+    vprof.innerHTML = '';
+    var setMeta = function (sel, attr, val) { var m = document.querySelector(sel); if (m) m.setAttribute(attr, val); };
+    if (!vd) {
+      document.title = 'Business not found | Landon Farley';
+      setMeta('meta[name="robots"]', 'content', 'noindex,follow');
+      vprof.innerHTML = '';
+      var nf = vEl('div', 'wrap narrow');
+      nf.appendChild(vEl('h1', '', 'We couldn’t find that business'));
+      nf.appendChild(vEl('p', '', 'It may have been removed, or the link may be incomplete.'));
+      nf.appendChild(vLink('vendors.html', 'Back to the Vendor Directory', false, 'btn'));
+      vprof.appendChild(nf);
+    } else {
+      var pageUrl = 'https://discoversiouxfallshomes.com/vendor.html?v=' + encodeURIComponent(vSlug(vd));
+      var ttl = vd.name + ' | ' + vd.category + ' in Sioux Falls | Landon Farley';
+      var desc = (vd.about || (vd.name + ': ' + (vd.services || vd.category) + ' in Sioux Falls, SD.')).slice(0, 300);
+      document.title = ttl;
+      setMeta('meta[name="description"]', 'content', desc);
+      setMeta('link[rel="canonical"]', 'href', pageUrl);
+      setMeta('meta[property="og:url"]', 'content', pageUrl);
+      setMeta('meta[property="og:title"]', 'content', ttl);
+      setMeta('meta[property="og:description"]', 'content', desc);
+      setMeta('meta[name="twitter:title"]', 'content', ttl);
+      setMeta('meta[name="twitter:description"]', 'content', desc);
+
+      // header
+      var head = vEl('header', 'vp-head wrap');
+      var crumbs = vEl('div', 'crumbs'); crumbs.appendChild(vLink('index.html', 'Home')); crumbs.appendChild(document.createTextNode(' / ')); crumbs.appendChild(vLink('vendors.html', 'Vendor Directory'));
+      head.appendChild(crumbs);
+      head.appendChild(vEl('span', 'eyebrow', vd.category));
+      head.appendChild(vEl('h1', '', vd.name));
+      if (vd.rating) {
+        var rl = vEl('div', 'vp-rating');
+        rl.appendChild(vEl('span', 'stars', vStars(vd.rating)));
+        rl.appendChild(vEl('span', '', Number(vd.rating).toFixed(1) + (vd.reviewCount ? ' · ' + vd.reviewCount + (vd.ratingSource ? ' ' + vd.ratingSource : '') + ' reviews' : '')));
+        head.appendChild(rl);
+      }
+      if (vd.services) head.appendChild(vEl('p', 'vp-sub', vd.services));
+      vprof.appendChild(head);
+
+      var wrap = vEl('div', 'wrap vp-grid');
+      var main = vEl('div', 'vp-main'), side = vEl('aside', 'vp-side');
+
+      // about
+      if (vd.about) { var s1 = vEl('section', 'vp-sec'); s1.appendChild(vEl('h2', '', 'About ' + vd.name)); s1.appendChild(vEl('p', '', vd.about)); main.appendChild(s1); }
+      if (vd.note) { var nt = vEl('blockquote', 'vp-note', vd.note); main.appendChild(nt); }
+      if (vd.offerings && vd.offerings.length) {
+        var s2 = vEl('section', 'vp-sec'); s2.appendChild(vEl('h2', '', 'What they do'));
+        var ul = vEl('ul', 'vp-list'); vd.offerings.forEach(function (o) { ul.appendChild(vEl('li', '', o)); });
+        s2.appendChild(ul); main.appendChild(s2);
+      }
+      if (vd.highlights && vd.highlights.length) {
+        var s3 = vEl('section', 'vp-sec'); s3.appendChild(vEl('h2', '', 'Good to know'));
+        var hl = vEl('div', 'vp-chips'); vd.highlights.forEach(function (o) { hl.appendChild(vEl('span', 'vp-chip', o)); });
+        s3.appendChild(hl); main.appendChild(s3);
+      }
+
+      // reviews
+      var s4 = vEl('section', 'vp-sec vp-reviews'); s4.appendChild(vEl('h2', '', 'Reviews'));
+      var hasRev = vd.reviews && vd.reviews.length;
+      if (vd.rating) {
+        var sum = vEl('div', 'rating-sum');
+        sum.appendChild(vEl('div', 'big', Number(vd.rating).toFixed(1)));
+        var sc = vEl('div', ''); sc.appendChild(vEl('div', 'stars', vStars(vd.rating)));
+        sc.appendChild(vEl('div', 'small', (vd.reviewCount ? 'Based on ' + vd.reviewCount + ' ' + (vd.ratingSource || '') + ' reviews' : 'Rating') + (vd.infoDate ? ' (as shown by the business, ' + vd.infoDate + ')' : '')));
+        sum.appendChild(sc); s4.appendChild(sum);
+      }
+      if (hasRev) {
+        vd.reviews.forEach(function (r) {
+          var rc = vEl('figure', 'vp-review');
+          rc.appendChild(vEl('div', 'stars', vStars(r.rating || 5)));
+          rc.appendChild(vEl('blockquote', '', r.text));
+          rc.appendChild(vEl('figcaption', '', r.author + (r.date ? ' · ' + r.date : '') + (r.source ? ' · ' + r.source : '')));
+          s4.appendChild(rc);
+        });
+      } else if (!vd.rating) {
+        s4.appendChild(vEl('p', '', 'No reviews have been added yet.'));
+      }
+      var rlinks = vEl('div', 'vp-rlinks');
+      if (vSafe(vd.ratingUrl)) rlinks.appendChild(vLink(vd.ratingUrl, 'Read reviews on ' + (vd.ratingSource || 'their profile'), true, 'btn ghost'));
+      if (vSafe(vd.facebook)) rlinks.appendChild(vLink(vd.facebook, 'See their Facebook page', true, 'btn ghost'));
+      if (rlinks.children.length) s4.appendChild(rlinks);
+      s4.appendChild(vEl('p', 'calc-disclaimer', 'Ratings and reviews come from the business’s public profiles and were not written by Landon Farley. Details come from the business’s own website' + (vd.infoDate ? ' as of ' + vd.infoDate : '') + ', so please confirm services, availability and pricing directly.'));
+      main.appendChild(s4);
+
+      // sidebar
+      var card = vEl('div', 'vp-card');
+      card.appendChild(vEl('h2', '', 'Get in touch'));
+      if (vd.phone) card.appendChild(vLink('tel:' + vd.phone.replace(/[^0-9+]/g, ''), 'Call ' + vd.phone, false, 'btn'));
+      var qurl = vSafe(vd.quoteUrl) || vSafe(vd.website);
+      if (qurl) card.appendChild(vLink(qurl, 'Request an estimate', true, 'btn ghost'));
+      var ln = vEl('ul', 'vp-links');
+      [['website', 'Website'], ['facebook', 'Facebook'], ['instagram', 'Instagram']].forEach(function (p) {
+        if (vSafe(vd[p[0]])) { var li = vEl('li'); li.appendChild(vLink(vd[p[0]], p[1], true)); ln.appendChild(li); }
+      });
+      if (vd.email) { var le = vEl('li'); le.appendChild(vLink('mailto:' + vd.email, vd.email)); ln.appendChild(le); }
+      if (ln.children.length) card.appendChild(ln);
+      var facts = vEl('dl', 'calc-facts');
+      [['Category', vd.category], ['Service area', vd.area]].forEach(function (p) {
+        if (p[1]) { var d = vEl('div'); d.appendChild(vEl('dt', '', p[0])); d.appendChild(vEl('dd', '', p[1])); facts.appendChild(d); }
+      });
+      card.appendChild(facts);
+      var ask = vEl('div', 'vp-ask');
+      ask.appendChild(vEl('p', '', 'Want my take, or need a different kind of pro?'));
+      ask.appendChild(vLink('vendors.html?ask=' + encodeURIComponent(vd.category) + '&for=' + encodeURIComponent(vd.name) + '#vendor-request', 'Ask Landon', false, 'btn ghost'));
+      card.appendChild(ask);
+      side.appendChild(card);
+
+      wrap.appendChild(main); wrap.appendChild(side); vprof.appendChild(wrap);
+
+      // more in this category
+      var others = allV.filter(function (x) { return x !== vd && x.category === vd.category; }).slice(0, 3);
+      if (others.length) {
+        var sec = vEl('section', 'tint'); var w2 = vEl('div', 'wrap');
+        var sh = vEl('div', 'sec-head'); sh.appendChild(vEl('span', 'eyebrow', 'More in ' + vd.category)); w2.appendChild(sh);
+        var g = vEl('div', 'grid g3');
+        others.forEach(function (o) {
+          var c = vEl('article', 'vendor'); c.appendChild(vEl('span', 'tag', o.category));
+          var h = vEl('h3'); h.appendChild(vLink('vendor.html?v=' + encodeURIComponent(vSlug(o)), o.name)); c.appendChild(h);
+          if (o.services) c.appendChild(vEl('p', '', o.services));
+          var l = vEl('div', 'vlinks'); l.appendChild(vLink('vendor.html?v=' + encodeURIComponent(vSlug(o)), 'View Profile', false, 'vp')); c.appendChild(l); g.appendChild(c);
+        });
+        w2.appendChild(g); sec.appendChild(w2); vprof.appendChild(sec);
+      }
+
+      // structured data
+      var ld = { '@context': 'https://schema.org', '@type': 'LocalBusiness', name: vd.name, url: vSafe(vd.website) || pageUrl, description: vd.about || vd.services || '', areaServed: vd.area || 'Sioux Falls, SD' };
+      if (vd.phone) ld.telephone = vd.phone;
+      var same = [vd.facebook, vd.instagram].filter(vSafe); if (same.length) ld.sameAs = same;
+      var sc2 = document.createElement('script'); sc2.type = 'application/ld+json'; sc2.text = JSON.stringify(ld); document.head.appendChild(sc2);
+    }
+  }
+
+  // Client review carousel
+  var car = document.getElementById('review-carousel');
+  if (car && window.REVIEWS && window.REVIEWS.length) {
+    var list = window.REVIEWS, gp = window.GOOGLE_PROFILE || {}, idx = 0;
+    var sumEl = document.getElementById('review-summary');
+    if (sumEl && (gp.rating || gp.url || gp.writeUrl)) {
+      sumEl.innerHTML = '';
+      if (gp.rating) {
+        var gs = vEl('div', 'rating-sum');
+        gs.appendChild(vEl('div', 'big', Number(gp.rating).toFixed(1)));
+        var gsc = vEl('div', ''); gsc.appendChild(vEl('div', 'stars', vStars(gp.rating)));
+        gsc.appendChild(vEl('div', 'small', gp.count ? gp.count + ' Google reviews' : 'Google rating')); gs.appendChild(gsc); sumEl.appendChild(gs);
+      }
+      var gl = vEl('div', 'vp-rlinks');
+      if (vSafe(gp.url)) gl.appendChild(vLink(gp.url, 'Read all reviews on Google', true, 'btn ghost'));
+      if (vSafe(gp.writeUrl)) gl.appendChild(vLink(gp.writeUrl, 'Leave a review', true, 'btn ghost'));
+      if (gl.children.length) sumEl.appendChild(gl);
+      sumEl.hidden = false;
+    }
+    car.innerHTML = '';
+    car.setAttribute('role', 'region'); car.setAttribute('aria-roledescription', 'carousel'); car.setAttribute('aria-label', 'Client reviews');
+    var stage = vEl('div', 'car-stage'); stage.setAttribute('aria-live', 'polite');
+    var nav = vEl('div', 'car-nav');
+    var prev = vEl('button', 'car-btn', '‹ Previous'); prev.type = 'button';
+    var count = vEl('span', 'car-count');
+    var next = vEl('button', 'car-btn', 'Next ›'); next.type = 'button';
+    nav.appendChild(prev); nav.appendChild(count); nav.appendChild(next);
+    var dots = vEl('div', 'car-dots');
+    list.forEach(function (r, i) {
+      var d = vEl('button', 'car-dot'); d.type = 'button'; d.setAttribute('aria-label', 'Show review ' + (i + 1) + ' of ' + list.length);
+      d.addEventListener('click', function () { show(i); }); dots.appendChild(d);
+    });
+    car.appendChild(stage); car.appendChild(nav); car.appendChild(dots);
+
+    function show(i) {
+      idx = (i + list.length) % list.length;
+      var r = list[idx];
+      stage.innerHTML = '';
+      var q = vEl('div', 'quote review' + (r.image ? '' : ' no-img'));
+      q.appendChild(vEl('div', 'mark', '“'));
+      if (r.image) { var im = document.createElement('img'); im.src = r.image; im.alt = r.imageAlt || ''; im.width = 320; im.height = 358; q.appendChild(im); }
+      var body = vEl('div', '');
+      body.appendChild(vEl('blockquote', '', r.text));
+      body.appendChild(vEl('div', 'who', r.author));
+      var st = vEl('div', 'stars', vStars(r.rating || 5)); st.setAttribute('aria-label', (r.rating || 5) + ' out of 5 stars'); body.appendChild(st);
+      var meta = [r.source ? r.source + ' review' : '', r.date || ''].filter(Boolean).join(' · ');
+      if (meta) body.appendChild(vEl('div', 'car-meta', meta));
+      q.appendChild(body); stage.appendChild(q);
+      count.textContent = (idx + 1) + ' of ' + list.length;
+      Array.prototype.forEach.call(dots.children, function (d, k) { d.setAttribute('aria-current', k === idx ? 'true' : 'false'); });
+      var single = list.length < 2; nav.hidden = single; dots.hidden = single;
+    }
+    prev.addEventListener('click', function () { show(idx - 1); });
+    next.addEventListener('click', function () { show(idx + 1); });
+    car.addEventListener('keydown', function (e) { if (e.key === 'ArrowLeft') show(idx - 1); else if (e.key === 'ArrowRight') show(idx + 1); });
+    var tx = null;
+    stage.addEventListener('touchstart', function (e) { tx = e.touches[0].clientX; }, { passive: true });
+    stage.addEventListener('touchend', function (e) { if (tx === null) return; var dx = e.changedTouches[0].clientX - tx; if (Math.abs(dx) > 50) show(idx + (dx < 0 ? 1 : -1)); tx = null; });
+    show(0);
   }
 
   // Listings
