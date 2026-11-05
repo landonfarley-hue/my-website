@@ -285,6 +285,12 @@ var WEB3FORMS_KEY = "54ef5727-9d0a-4a08-8fc3-3c4fa1a31e29";
   function vSlug(v) { return v.slug || String(v.name || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, ''); }
   function vStars(r) { var n = Math.max(0, Math.min(5, Math.round(r || 0))); return '★★★★★'.slice(0, n) + '☆☆☆☆☆'.slice(0, 5 - n); }
 
+  // Merge monthly review data (vendor-reviews.js) into the vendor list
+  (window.VENDORS || []).forEach(function (v) {
+    var r = (window.VENDOR_REVIEWS || {})[vSlug(v)];
+    if (r) Object.keys(r).forEach(function (k) { v[k] = r[k]; });
+  });
+
   // Vendor directory
   var vgrid = document.getElementById('vendor-grid');
   if (vgrid) {
@@ -441,7 +447,7 @@ var WEB3FORMS_KEY = "54ef5727-9d0a-4a08-8fc3-3c4fa1a31e29";
         var sum = vEl('div', 'rating-sum');
         sum.appendChild(vEl('div', 'big', Number(vd.rating).toFixed(1)));
         var sc = vEl('div', ''); sc.appendChild(vEl('div', 'stars', vStars(vd.rating)));
-        sc.appendChild(vEl('div', 'small', (vd.reviewCount ? 'Based on ' + vd.reviewCount + ' ' + (vd.ratingSource || '') + ' reviews' : 'Rating') + (vd.infoDate ? ' (as shown by the business, ' + vd.infoDate + ')' : '')));
+        sc.appendChild(vEl('div', 'small', (vd.reviewCount ? 'Based on ' + vd.reviewCount + ' ' + (vd.ratingSource || '') + ' reviews' : 'Rating') + (vd.updated ? ' (updated ' + vd.updated + ')' : (vd.infoDate ? ' (as shown by the business, ' + vd.infoDate + ')' : ''))));
         sum.appendChild(sc); s4.appendChild(sum);
       }
       if (hasRev) {
