@@ -255,3 +255,35 @@ textarea{min-height:130px;resize:vertical}
 .author-box b{font-family:var(--serif-display);letter-spacing:.1em;text-transform:uppercase;font-weight:500;font-size:1rem}
 .author-box p{font-size:1.1rem;color:var(--ink-soft);margin-top:4px;line-height:1.5}
 @media(max-width:560px){.author-box{grid-template-columns:1fr;text-align:center}.author-box img{margin:0 auto}}
+
+/* ---------- payment calculator ---------- */
+.calc{display:grid;grid-template-columns:1.1fr .9fr;gap:0;border:1px solid var(--gold);background:var(--cream);outline:1px solid var(--gold);outline-offset:-9px}
+.calc-inputs{padding:44px 40px}
+.calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 18px}
+.calc-grid .full{grid-column:1/-1}
+.calc-grid label{margin-top:14px}
+.calc-hint{font-size:1rem;color:var(--ink-soft);margin-top:20px}
+.calc-results{padding:44px 40px;background:var(--cream-2);border-left:1px solid var(--gold);display:flex;flex-direction:column}
+.calc-total{font-family:var(--serif-display);font-size:clamp(2.6rem,6vw,3.6rem);color:var(--gold-deep);line-height:1.1;margin:10px 0 18px}
+.calc-total::after{content:" /mo";font-family:var(--sans);font-size:.8rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft)}
+.calc-bar{display:flex;height:14px;border:1px solid var(--gold);background:var(--cream);margin-bottom:18px;gap:2px;padding:1px}
+.calc-bar span{display:block;height:100%;min-width:0;transition:width .25s ease}
+.sw{display:inline-block;width:12px;height:12px;margin-right:10px;vertical-align:-1px;border:1px solid rgba(0,0,0,.15)}
+.sw-pi,[data-seg="pi"]{background:#1B1713}
+.sw-tax,[data-seg="tax"]{background:#8A6532}
+.sw-ins,[data-seg="ins"]{background:#C8A56E}
+.sw-pmi,[data-seg="pmi"]{background:#E4D2B0}
+.sw-hoa,[data-seg="hoa"]{background:#8C8279}
+.calc-rows{list-style:none}
+.calc-rows li{display:flex;justify-content:space-between;gap:16px;padding:10px 0;border-bottom:1px solid var(--sand);font-size:1.15rem}
+.calc-rows li[hidden]{display:none}
+.calc-rows b{font-family:var(--serif-display);font-weight:500;letter-spacing:.02em}
+.calc-facts{margin:18px 0 6px}
+.calc-facts div{display:flex;justify-content:space-between;gap:16px;padding:6px 0;font-size:1.05rem;color:var(--ink-soft)}
+.calc-facts dd{color:var(--ink)}
+.calc-pmi{font-size:1rem;color:var(--ink-soft);margin:10px 0 0}
+.calc-pmi[hidden]{display:none}
+.calc-results .btn{margin-top:22px;text-align:center}
+.calc-disclaimer{font-size:.92rem;line-height:1.45;color:var(--ink-soft);margin-top:18px}
+@media(max-width:900px){.calc{grid-template-columns:1fr}.calc-results{border-left:0;border-top:1px solid var(--gold)}.calc-inputs,.calc-results{padding:34px 24px}}
+@media(max-width:420px){.calc-grid{grid-template-columns:1fr}}

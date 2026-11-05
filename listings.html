@@ -24,7 +24,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Montserrat:wght@400;500&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=20261104b">
+<link rel="stylesheet" href="style.css?v=20261104c">
 
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://landonfarley-hue.github.io/my-website/"}, {"@type": "ListItem", "position": 2, "name": "Listings", "item": "https://landonfarley-hue.github.io/my-website/listings.html"}]}</script>
 </head>
@@ -77,6 +77,53 @@
       <div class="card static reveal"><div class="num">01</div><h3>Off-Market Access</h3><p>I&rsquo;m an expert in buying and selling off market, so you see opportunities before the crowd does. <a href="off-market-homes-sioux-falls.html" style="color:var(--gold-deep)">Learn how it works</a>.</p></div>
       <div class="card static reveal"><div class="num">02</div><h3>Get Pre-Approved</h3><p>A pre-approval letter shows sellers you&rsquo;re serious: a clear budget, faster closing, and a locked-in rate. <a href="first-time-home-buyer-guide-sioux-falls.html" style="color:var(--gold-deep)">Read the buyer guide</a>.</p></div>
       <div class="card static reveal"><div class="num">03</div><h3>Pick Your Area</h3><p>East, west, south, north, downtown or central: every part of Sioux Falls has its own feel. <a href="moving-to-sioux-falls-neighborhood-guide.html" style="color:var(--gold-deep)">See the neighborhood guide</a>.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="payment-calculator">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Payment calculator</span>
+      <h2 style="margin-top:12px">Estimate your monthly mortgage payment</h2>
+      <div class="divider"><i></i></div>
+      <p>See what a home could cost each month, including taxes and insurance. Change any number to match your situation.</p>
+    </div>
+    <div class="calc reveal" data-calc>
+      <form class="calc-inputs" novalidate onsubmit="return false">
+        <div class="calc-grid">
+          <div class="full"><label for="l-price">Home price ($)</label><input id="l-price" name="price" type="number" inputmode="decimal" min="0" step="1000" value="350000"></div>
+          <div><label for="l-down">Down payment ($)</label><input id="l-down" name="down" type="number" inputmode="decimal" min="0" step="1000" value="35000"></div>
+          <div><label for="l-downpct">Down payment (%)</label><input id="l-downpct" name="downpct" type="number" inputmode="decimal" min="0" max="100" step="0.5" value="10"></div>
+          <div><label for="l-term">Loan term</label><select id="l-term" name="term"><option value="30" selected>30 years</option><option value="20">20 years</option><option value="15">15 years</option></select></div>
+          <div><label for="l-rate">Interest rate (%)</label><input id="l-rate" name="rate" type="number" inputmode="decimal" min="0" max="30" step="0.125" value="6.5"></div>
+          <div><label for="l-tax">Property tax (% per year)</label><input id="l-tax" name="tax" type="number" inputmode="decimal" min="0" max="10" step="0.05" value="1.2"></div>
+          <div><label for="l-ins">Home insurance ($ per year)</label><input id="l-ins" name="ins" type="number" inputmode="decimal" min="0" step="50" value="1800"></div>
+          <div class="full"><label for="l-hoa">HOA dues ($ per month)</label><input id="l-hoa" name="hoa" type="number" inputmode="decimal" min="0" step="10" value="0"></div>
+        </div>
+        <p class="calc-hint">The interest rate, tax rate and insurance shown are examples. Rates change daily and taxes vary by address, so check with a lender for today&rsquo;s numbers.</p>
+      </form>
+      <div class="calc-results" aria-label="Estimated monthly payment">
+        <span class="eyebrow">Estimated monthly payment</span>
+        <div class="calc-total" data-out="total" role="status" aria-live="polite" aria-atomic="true">$0</div>
+        <div class="calc-bar" data-out="bar" aria-hidden="true">
+          <span data-seg="pi"></span><span data-seg="tax"></span><span data-seg="ins"></span><span data-seg="pmi"></span><span data-seg="hoa"></span>
+        </div>
+        <ul class="calc-rows">
+          <li><span><i class="sw sw-pi"></i>Principal &amp; interest</span><b data-out="pi">$0</b></li>
+          <li><span><i class="sw sw-tax"></i>Property tax</span><b data-out="tax">$0</b></li>
+          <li><span><i class="sw sw-ins"></i>Home insurance</span><b data-out="ins">$0</b></li>
+          <li data-row="pmi" hidden><span><i class="sw sw-pmi"></i>Mortgage insurance (est.)</span><b data-out="pmi">$0</b></li>
+          <li data-row="hoa" hidden><span><i class="sw sw-hoa"></i>HOA dues</span><b data-out="hoa">$0</b></li>
+        </ul>
+        <dl class="calc-facts">
+          <div><dt>Loan amount</dt><dd data-out="loan">$0</dd></div>
+          <div><dt>Total interest over the loan</dt><dd data-out="interest">$0</dd></div>
+        </dl>
+        <p class="calc-pmi" data-note="pmi" hidden>With less than 20% down, lenders usually require mortgage insurance. This estimate uses 0.5% of the loan per year; your actual cost will vary.</p>
+        <a class="btn" href="lets-talk.html">Talk to Landon About Your Budget</a>
+        <p class="calc-disclaimer">This calculator gives estimates for education only. It is not a loan offer, quote or commitment to lend, and your actual payment will depend on your lender, credit, and the property. Speak with a lender for exact figures.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -145,6 +192,6 @@ window.LISTINGS = [
 
 ];
 </script>
-<script src="script.js?v=20261104b"></script>
+<script src="script.js?v=20261104c"></script>
 </body>
 </html>

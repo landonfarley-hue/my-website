@@ -92,6 +92,90 @@ var WEB3FORMS_KEY = "54ef5727-9d0a-4a08-8fc3-3c4fa1a31e29";
     });
   });
 
+
+  // Mortgage payment calculator
+  document.querySelectorAll('[data-calc]').forEach(function (c) {
+    var f = function (n) { return c.querySelector('[name="' + n + '"]'); };
+    var out = function (n) { return c.querySelector('[data-out="' + n + '"]'); };
+    var money = function (v) {
+      return '$' + Math.round(v).toLocaleString('en-US');
+    };
+    var num = function (el) {
+      var v = parseFloat(el.value);
+      return isFinite(v) && v > 0 ? v : 0;
+    };
+    var syncing = false;
+
+    function calc() {
+      var price = num(f('price'));
+      var down = Math.min(num(f('down')), price);
+      var loan = Math.max(price - down, 0);
+      var years = parseInt(f('term').value, 10) || 30;
+      var n = years * 12;
+      var r = num(f('rate')) / 100 / 12;
+      var pi = loan === 0 ? 0 : (r === 0 ? loan / n : loan * r / (1 - Math.pow(1 + r, -n)));
+      var tax = price * num(f('tax')) / 100 / 12;
+      var ins = num(f('ins')) / 12;
+      var downPct = price > 0 ? down / price * 100 : 0;
+      var pmi = (loan > 0 && downPct < 20) ? loan * 0.005 / 12 : 0;
+      var hoa = num(f('hoa'));
+      var total = pi + tax + ins + pmi + hoa;
+
+      if (price <= 0) {
+        // No price entered yet: show dashes instead of a misleading partial total.
+        ['total', 'pi', 'tax', 'ins', 'pmi', 'hoa', 'loan', 'interest'].forEach(function (k) { out(k).textContent = '—'; });
+        c.querySelector('[data-row="pmi"]').hidden = true;
+        c.querySelector('[data-row="hoa"]').hidden = true;
+        c.querySelector('[data-note="pmi"]').hidden = true;
+        c.querySelectorAll('[data-seg]').forEach(function (s) { s.style.display = 'none'; });
+        return;
+      }
+
+      out('total').textContent = money(total);
+      out('pi').textContent = money(pi);
+      out('tax').textContent = money(tax);
+      out('ins').textContent = money(ins);
+      out('pmi').textContent = money(pmi);
+      out('hoa').textContent = money(hoa);
+      out('loan').textContent = money(loan);
+      out('interest').textContent = money(Math.max(pi * n - loan, 0));
+      c.querySelector('[data-row="pmi"]').hidden = pmi === 0;
+      c.querySelector('[data-row="hoa"]').hidden = hoa === 0;
+      c.querySelector('[data-note="pmi"]').hidden = pmi === 0;
+
+      var parts = { pi: pi, tax: tax, ins: ins, pmi: pmi, hoa: hoa };
+      Object.keys(parts).forEach(function (k) {
+        var seg = c.querySelector('[data-seg="' + k + '"]');
+        seg.style.width = total > 0 ? (parts[k] / total * 100) + '%' : '0%';
+        seg.style.display = parts[k] > 0 ? 'block' : 'none';
+      });
+    }
+
+    // Keep the down payment $ and % in step with each other and the price.
+    f('down').addEventListener('input', function () {
+      if (syncing) return; syncing = true;
+      var p = num(f('price'));
+      f('downpct').value = p > 0 ? Math.round(num(f('down')) / p * 1000) / 10 : 0;
+      syncing = false; calc();
+    });
+    f('downpct').addEventListener('input', function () {
+      if (syncing) return; syncing = true;
+      var pct = Math.min(num(f('downpct')), 100);
+      f('down').value = Math.round(num(f('price')) * pct / 100);
+      syncing = false; calc();
+    });
+    f('price').addEventListener('input', function () {
+      var pct = Math.min(num(f('downpct')), 100);
+      f('down').value = Math.round(num(f('price')) * pct / 100);
+      calc();
+    });
+    ['term', 'rate', 'tax', 'ins', 'hoa'].forEach(function (n) {
+      f(n).addEventListener('input', calc);
+      f(n).addEventListener('change', calc);
+    });
+    calc();
+  });
+
   // Listings
   var grid = document.getElementById('listing-grid');
   if (grid && window.LISTINGS && window.LISTINGS.length) {
