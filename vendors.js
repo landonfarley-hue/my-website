@@ -10,7 +10,10 @@
    about        a short paragraph for the profile page
    offerings    a list of services, for example ["Mowing", "Snow removal"]
    highlights   a list of short selling points, for example ["Locally owned", "Insured"]
-   phone, website, email, facebook, instagram, quoteUrl (a "request an estimate" page)
+   phone, website, email, facebook, instagram
+   address      a list of office addresses, for example ["123 Main St., Sioux Falls, SD 57104"]
+   quoteUrl     optional link for a big button, and quoteLabel for its words (default "Request an estimate")
+   infoSource   where the details came from (default: the business's own website)
    note         "Landon's note" shown on the profile (only add this if you wrote it)
    rating       for example 5.0     reviewCount   for example 28
    ratingSource where the rating comes from, for example "Google"     ratingUrl   link to those reviews
@@ -45,6 +48,67 @@ window.VENDOR_CATEGORIES = [
 ];
 
 window.VENDORS = [
+  {
+    name: "First Dakota Title",
+    category: "Title & Closing",
+    services: "Title and closing services",
+    area: "Sioux Falls and Lincoln County",
+    about: "First Dakota Title is a Sioux Falls title company with a main office downtown and a closing office on the south side of town in Lincoln County.",
+    address: ["Main office: 600 S. Main Ave., Suite 101, Sioux Falls, SD 57104", "Lincoln County closing office: 6340 S. Western Ave., Suite 100, Sioux Falls, SD 57108"],
+    phone: "(605) 338-6505",
+    website: "https://thetitleresourcenetwork.com/",
+    infoSource: "public business directories",
+    infoDate: "November 2026"
+  },
+  {
+    name: "Getty Abstract & Title Company",
+    category: "Title & Closing",
+    services: "Abstract, title and closing services",
+    area: "Sioux Falls",
+    about: "Getty Abstract & Title Company (also listed as Getty-Midwest Abstract & Title Company) is a Sioux Falls title company on the south side of town.",
+    address: ["5800 S. Remington Pl., Suite 120, Sioux Falls, SD 57108"],
+    phone: "(605) 336-0490",
+    website: "https://www.getty-midwest.com/",
+    infoSource: "public business directories",
+    infoDate: "November 2026"
+  },
+  {
+    name: "Anthem Title",
+    category: "Title & Closing",
+    services: "Title and closing services",
+    area: "Sioux Falls",
+    about: "Anthem Title (Anthem Title Escrow Services) is a Sioux Falls title and escrow company and a member of the Home Builders Association of the Sioux Empire.",
+    address: ["6300 S. Old Village Pl., Suite 200, Sioux Falls, SD 57108"],
+    phone: "(605) 306-3400",
+    website: "https://www.anthemtitle.com/",
+    infoSource: "public business directories",
+    infoDate: "November 2026"
+  },
+  {
+    name: "Land Title Guaranty & Co.",
+    category: "Title & Closing",
+    services: "Title and closing services",
+    area: "Sioux Falls",
+    about: "Land Title Guaranty & Co. is a Sioux Falls title company.",
+    address: ["3809 S. Kiwanis Cir., Sioux Falls, SD 57105"],
+    phone: "(605) 336-1095",
+    infoSource: "public business directories",
+    infoDate: "November 2026"
+  },
+  {
+    name: "Stewart Title Company, Sioux Falls",
+    category: "Title & Closing",
+    services: "Title insurance, closing and escrow",
+    area: "Sioux Falls, Brandon, Valley Springs and Harrisburg",
+    about: "Stewart Title\u2019s Sioux Falls office provides title insurance and closing and escrow services for residential and commercial transactions, and describes its service as a personal, friendly experience with support during and after a transaction.",
+    offerings: ["Title insurance", "Closing and escrow for residential and commercial transactions", "Online title order form", "Closing cost, seller proceeds and title fee estimates", "Guides for first-time homebuyers"],
+    address: ["6216 S. Pinnacle Pl., Suite 102, Sioux Falls, SD 57108"],
+    phone: "(605) 339-3199",
+    website: "https://www.stewart.com/sioux-falls",
+    quoteUrl: "https://www.stewart.com/sioux-falls",
+    quoteLabel: "Get a quote",
+    infoDate: "November 2026"
+  },
   {
     name: "Lawn Wolf LLC",
     category: "Landscaping & Snow Removal",

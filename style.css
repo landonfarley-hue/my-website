@@ -399,3 +399,5 @@ textarea{min-height:130px;resize:vertical}
 .vendor .vlinks a.vp{background:var(--navy);color:#fff;border:1px solid var(--navy);padding:9px 14px}
 .vendor .vlinks a.vp:hover{background:var(--gold);border-color:var(--gold);color:var(--navy)}
 @media(max-width:900px){.vp-grid{grid-template-columns:1fr;gap:30px}.vp-side{position:static}.vp-list{columns:1}}
+
+.vp-addr{display:block;padding:4px 0}.vp-addr dd{color:var(--ink-soft);font-size:1rem}

@@ -452,22 +452,21 @@ var WEB3FORMS_KEY = "54ef5727-9d0a-4a08-8fc3-3c4fa1a31e29";
           rc.appendChild(vEl('figcaption', '', r.author + (r.date ? ' · ' + r.date : '') + (r.source ? ' · ' + r.source : '')));
           s4.appendChild(rc);
         });
-      } else if (!vd.rating) {
-        s4.appendChild(vEl('p', '', 'No reviews have been added yet.'));
       }
       var rlinks = vEl('div', 'vp-rlinks');
       if (vSafe(vd.ratingUrl)) rlinks.appendChild(vLink(vd.ratingUrl, 'Read reviews on ' + (vd.ratingSource || 'their profile'), true, 'btn ghost'));
       if (vSafe(vd.facebook)) rlinks.appendChild(vLink(vd.facebook, 'See their Facebook page', true, 'btn ghost'));
       if (rlinks.children.length) s4.appendChild(rlinks);
-      s4.appendChild(vEl('p', 'calc-disclaimer', 'Ratings and reviews come from the business’s public profiles and were not written by Landon Farley. Details come from the business’s own website' + (vd.infoDate ? ' as of ' + vd.infoDate : '') + ', so please confirm services, availability and pricing directly.'));
-      main.appendChild(s4);
+      var showRev = vd.rating || hasRev || rlinks.children.length;
+      var disc = vEl('p', 'calc-disclaimer', (showRev ? 'Ratings and reviews come from the business\u2019s public profiles and were not written by Landon Farley. ' : '') + 'Details come from ' + (vd.infoSource || 'the business\u2019s own website') + (vd.infoDate ? ' as of ' + vd.infoDate : '') + ', so please confirm services, hours and pricing directly. A listing is not an endorsement or guarantee.');
+      if (showRev) { s4.appendChild(disc); main.appendChild(s4); } else { main.appendChild(disc); }
 
       // sidebar
       var card = vEl('div', 'vp-card');
       card.appendChild(vEl('h2', '', 'Get in touch'));
       if (vd.phone) card.appendChild(vLink('tel:' + vd.phone.replace(/[^0-9+]/g, ''), 'Call ' + vd.phone, false, 'btn'));
-      var qurl = vSafe(vd.quoteUrl) || vSafe(vd.website);
-      if (qurl) card.appendChild(vLink(qurl, 'Request an estimate', true, 'btn ghost'));
+      var qurl = vSafe(vd.quoteUrl);
+      if (qurl) card.appendChild(vLink(qurl, vd.quoteLabel || 'Request an estimate', true, 'btn ghost'));
       var ln = vEl('ul', 'vp-links');
       [['website', 'Website'], ['facebook', 'Facebook'], ['instagram', 'Instagram']].forEach(function (p) {
         if (vSafe(vd[p[0]])) { var li = vEl('li'); li.appendChild(vLink(vd[p[0]], p[1], true)); ln.appendChild(li); }
@@ -478,6 +477,7 @@ var WEB3FORMS_KEY = "54ef5727-9d0a-4a08-8fc3-3c4fa1a31e29";
       [['Category', vd.category], ['Service area', vd.area]].forEach(function (p) {
         if (p[1]) { var d = vEl('div'); d.appendChild(vEl('dt', '', p[0])); d.appendChild(vEl('dd', '', p[1])); facts.appendChild(d); }
       });
+      (vd.address || []).forEach(function (a) { var d = vEl('div', 'vp-addr'); d.appendChild(vEl('dd', '', a)); facts.appendChild(d); });
       card.appendChild(facts);
       var ask = vEl('div', 'vp-ask');
       ask.appendChild(vEl('p', '', 'Want my take, or need a different kind of pro?'));
