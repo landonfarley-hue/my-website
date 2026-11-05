@@ -18,6 +18,25 @@ var WEB3FORMS_KEY = "54ef5727-9d0a-4a08-8fc3-3c4fa1a31e29";
     });
   }
 
+  // Grouped menu: open/close dropdowns on click (hover and keyboard focus also work through CSS)
+  var subs = document.querySelectorAll('.has-sub');
+  function closeSubs(except) {
+    subs.forEach(function (li) {
+      if (li !== except) { li.classList.remove('open'); li.querySelector('.sub-btn').setAttribute('aria-expanded', 'false'); }
+    });
+  }
+  subs.forEach(function (li) {
+    var b = li.querySelector('.sub-btn');
+    b.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var open = li.classList.toggle('open');
+      b.setAttribute('aria-expanded', open ? 'true' : 'false');
+      closeSubs(li);
+    });
+  });
+  document.addEventListener('click', function () { closeSubs(null); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeSubs(null); if (document.activeElement && document.activeElement.closest && document.activeElement.closest('.has-sub')) document.activeElement.blur(); } });
+
   // Footer year
   var y = document.getElementById('year');
   if (y) y.textContent = new Date().getFullYear();

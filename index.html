@@ -24,7 +24,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Montserrat:wght@400;500&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=20261105c">
+<link rel="stylesheet" href="style.css?v=20261105d">
 <link rel="preload" as="image" href="images/hero.jpg">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "RealEstateAgent", "name": "Landon Farley Real Estate", "description": "Sioux Falls, SD real estate agent helping buyers and sellers with trusted, client-centered service. Part of a team, so someone is always available.", "telephone": "+1-605-251-3116", "email": "LandonFarley@kw.com", "address": {"@type": "PostalAddress", "addressLocality": "Sioux Falls", "addressRegion": "SD", "addressCountry": "US"}, "areaServed": [{"@type": "City", "name": "Sioux Falls"}, {"@type": "City", "name": "Brandon"}, {"@type": "City", "name": "Harrisburg"}, {"@type": "City", "name": "Tea"}, {"@type": "City", "name": "Lennox"}, {"@type": "City", "name": "Hartford"}, {"@type": "City", "name": "Dell Rapids"}], "parentOrganization": {"@type": "Organization", "name": "Keller Williams Sioux Falls"}, "sameAs": ["https://www.facebook.com/LandonFarleyKW"], "knowsAbout": ["Sioux Falls real estate", "Buying a home", "Selling a home", "Off-market real estate", "Home valuation"], "url": "https://discoversiouxfallshomes.com/", "image": "https://discoversiouxfallshomes.com/images/landon.jpg"}</script>
 </head>
@@ -34,7 +34,7 @@
   <div class="header-inner">
     <a class="brand" href="index.html" aria-label="Landon Farley Real Estate, home"><b>LANDON FARLEY</b><span>Real Estate</span></a>
     <button class="menu-btn" aria-expanded="false" aria-controls="nav">MENU</button>
-    <nav aria-label="Main"><ul class="nav" id="nav"><li><a href="listings.html">Listings</a></li><li><a href="home-value.html">Home Value</a></li><li><a href="testimonials.html">Testimonials</a></li><li><a href="about.html">About</a></li><li><a href="community.html">Community</a></li><li><a href="vendors.html">Vendors</a></li><li><a href="blog.html">Blog</a></li><li><a href="lets-talk.html" class="cta">Let&rsquo;s Talk</a></li></ul></nav>
+    <nav aria-label="Main"><ul class="nav" id="nav"><li><a href="listings.html">Listings</a></li><li><a href="home-value.html">Home Value</a></li><li class="has-sub"><button type="button" class="sub-btn" aria-expanded="false" aria-controls="sub-about">About</button><ul class="sub" id="sub-about"><li><a href="about.html">About Landon</a></li><li><a href="testimonials.html">Testimonials</a></li><li><a href="community.html">Community</a></li></ul></li><li class="has-sub"><button type="button" class="sub-btn" aria-expanded="false" aria-controls="sub-res">Resources</button><ul class="sub" id="sub-res"><li><a href="blog.html">Blog &amp; Local News</a></li><li><a href="vendors.html">Vendor Directory</a></li><li><a href="rent-vs-buy-calculator.html">Rent vs. Buy Calculator</a></li><li><a href="index.html#payment-calculator">Payment Calculator</a></li></ul></li><li class="phone"><a href="tel:+16052513116" aria-label="Call Landon at (605) 251-3116">(605) 251-3116</a></li><li><a href="lets-talk.html" class="cta">Let&rsquo;s Talk</a></li></ul></nav>
   </div>
 </header>
 <main id="main">
@@ -50,6 +50,20 @@
     </div>
   </div>
 </section>
+
+<section class="quick-sec">
+  <div class="wrap">
+    <div class="quick reveal">
+      <a class="qtile" href="listings.html"><svg width="44" height="44" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 22 24 6l19 16"/><path d="M10 19v23h28V19"/><path d="M20 42V30h8v12"/></svg><b>Find a Home</b><span>Browse homes for sale around Sioux Falls.</span></a>
+      <a class="qtile" href="home-value.html"><svg width="44" height="44" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 24 24 6h16v16L22 40z"/><circle cx="33" cy="15" r="2.5"/></svg><b>Sell Your Home</b><span>Find out what your home could sell for.</span></a>
+      <a class="qtile" href="#payment-calculator"><svg width="44" height="44" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="5" width="30" height="38" rx="2"/><path d="M15 13h18M15 22h4M23 22h4M31 22h2M15 30h4M23 30h4M31 30h2M15 37h4M23 37h4M31 37h2"/></svg><b>Run the Numbers</b><span>Estimate your monthly payment.</span></a>
+      <a class="qtile" href="lets-talk.html"><svg width="44" height="44" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 10h36v24H20l-9 8v-8H6z"/></svg><b>Ask Landon</b><span>Questions about buying, selling or moving? Reach out.</span></a>
+    </div>
+  </div>
+</section>
+<div class="trust" role="list" aria-label="About Landon">
+  <span role="listitem">Keller Williams Sioux Falls</span><i></i><span role="listitem">SD License #21614</span><i></i><span role="listitem">Part of a team, so someone is always available</span><i></i><span role="listitem">Lifelong Sioux Falls local</span>
+</div>
 
 <section style="padding-bottom:40px">
   <div class="wrap">
@@ -272,6 +286,7 @@
   </div>
 </footer>
 
-<script src="script.js?v=20261105c"></script>
+<nav class="m-bar" aria-label="Quick contact"><a href="tel:+16052513116">Call</a><a href="sms:+16052513116">Text</a><a href="home-value.html">Home Value</a></nav>
+<script src="script.js?v=20261105d"></script>
 </body>
 </html>
