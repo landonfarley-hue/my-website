@@ -267,6 +267,101 @@ var WEB3FORMS_KEY = "54ef5727-9d0a-4a08-8fc3-3c4fa1a31e29";
     calc();
   });
 
+
+  // Vendor directory
+  var vgrid = document.getElementById('vendor-grid');
+  if (vgrid) {
+    var cats = window.VENDOR_CATEGORIES || [];
+    var vendors = (window.VENDORS || []).slice().sort(function (a, b) { return a.name.localeCompare(b.name); });
+    var search = document.getElementById('vendor-search');
+    var chipsEl = document.getElementById('vendor-chips');
+    var countEl = document.getElementById('vendor-count');
+    var emptyEl = document.getElementById('vendor-empty');
+    var active = '';
+
+    function el(tag, cls, text) {
+      var e = document.createElement(tag);
+      if (cls) e.className = cls;
+      if (text) e.textContent = text;
+      return e;
+    }
+    function link(href, text, external) {
+      var a = el('a', '', text);
+      a.href = href;
+      if (external) { a.target = '_blank'; a.rel = 'noopener'; }
+      return a;
+    }
+    function safeUrl(u) { return /^https?:\/\//i.test(u || '') ? u : ''; }
+
+    // Category chips + form dropdown
+    function addChip(label, value) {
+      var b = el('button', 'chip', label);
+      b.type = 'button';
+      b.setAttribute('aria-pressed', value === active ? 'true' : 'false');
+      b.addEventListener('click', function () {
+        active = value;
+        Array.prototype.forEach.call(chipsEl.children, function (c) { c.setAttribute('aria-pressed', c === b ? 'true' : 'false'); });
+        render();
+      });
+      chipsEl.appendChild(b);
+    }
+    addChip('All', '');
+    cats.forEach(function (c) { addChip(c, c); });
+    var sel = document.querySelector('[data-vendor-cats]');
+    if (sel) {
+      cats.concat(['Something else']).forEach(function (c) { var o = el('option', '', c); sel.appendChild(o); });
+    }
+
+    function render() {
+      var q = (search.value || '').toLowerCase().trim();
+      var list = vendors.filter(function (v) {
+        if (active && v.category !== active) return false;
+        if (!q) return true;
+        return [v.name, v.category, v.services, v.area, v.note].join(' ').toLowerCase().indexOf(q) !== -1;
+      });
+      vgrid.innerHTML = '';
+      list.forEach(function (v) {
+        var card = el('article', 'vendor');
+        card.appendChild(el('span', 'tag', v.category));
+        card.appendChild(el('h3', '', v.name));
+        if (v.services) card.appendChild(el('p', '', v.services));
+        if (v.area) card.appendChild(el('p', '', v.area));
+        if (v.note) card.appendChild(el('p', 'vnote', v.note));
+        var links = el('div', 'vlinks');
+        if (v.phone) links.appendChild(link('tel:' + v.phone.replace(/[^0-9+]/g, ''), 'Call ' + v.phone));
+        if (safeUrl(v.website)) links.appendChild(link(safeUrl(v.website), 'Website', true));
+        if (v.email) links.appendChild(link('mailto:' + v.email, 'Email'));
+        card.appendChild(links);
+        vgrid.appendChild(card);
+      });
+
+      var filtered = !!(q || active);
+      if (list.length) {
+        countEl.textContent = 'Showing ' + list.length + ' of ' + vendors.length + ' businesses';
+        emptyEl.hidden = true;
+      } else {
+        countEl.textContent = '';
+        emptyEl.hidden = false;
+        var none = vendors.length === 0;
+        document.getElementById('vendor-empty-eyebrow').textContent = none ? 'Directory' : 'No matches';
+        document.getElementById('vendor-empty-title').textContent = none ? 'Businesses are being added' : 'No matches yet';
+        document.getElementById('vendor-empty-text').textContent = none
+          ? 'I\u2019m adding local businesses to this directory. In the meantime, choose a category above and ask me for a recommendation, and I\u2019ll point you to someone I trust.'
+          : 'I may know someone who isn\u2019t listed yet. Ask me and I\u2019ll point you in the right direction.';
+        void filtered;
+      }
+    }
+    var ask = document.getElementById('vendor-ask');
+    if (ask) ask.addEventListener('click', function () {
+      if (sel) sel.value = active && cats.indexOf(active) !== -1 ? active : (sel.options[0] ? sel.options[0].value : '');
+      var msg = document.getElementById('v-msg');
+      var q = (search.value || '').trim();
+      if (msg && q && !msg.value) msg.value = 'I\u2019m looking for: ' + q;
+    });
+    search.addEventListener('input', render);
+    render();
+  }
+
   // Listings
   var grid = document.getElementById('listing-grid');
   if (grid && window.LISTINGS && window.LISTINGS.length) {
