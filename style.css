@@ -540,3 +540,4 @@ input,select,textarea{border-radius:4px;border-color:#C3CEE0}
 .hero-logo{order:2;border-right:0;padding-right:0;border-left:1px solid rgba(194,161,94,.55);padding-left:26px}
 .hero-name h1{text-align:right}
 @media(max-width:700px){.hero-logo{order:2;border:0;padding:0}.hero-name h1{text-align:center}}
+.hero-logo,.hero-name{display:none}
