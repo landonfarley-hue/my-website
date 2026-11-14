@@ -139,4 +139,51 @@ window.VENDORS = [
     ratingUrl: "https://g.co/kgs/bVXgF7V",
     infoDate: "November 2026"
   },
+  {
+    name: "Tanner Preheim, Plains Commerce Bank",
+    category: "Lenders & Mortgage",
+    services: "Home mortgage lending",
+    area: "Sioux Falls",
+    about: "Tanner Preheim is part of the Plains Commerce Bank mortgage team in Sioux Falls and works closely alongside Senior Mortgage Banker Devin Malmgren. Plains Commerce Bank pictures Tanner with Devin and the rest of the team on Devin’s profile page. Devin’s bio describes working with first-time homebuyers and experienced homeowners, taking time to explain every step of the loan process, and being known for responsiveness and honest communication.",
+    offerings: ["Conventional loans", "FHA loans", "VA loans", "USDA Rural Development loans", "Construction loans", "Refinancing"],
+    highlights: ["Works alongside Senior Mortgage Banker Devin Malmgren", "Local Sioux Falls mortgage team"],
+    address: ["Plains Commerce Bank, West 49th Street office, Sioux Falls, SD"],
+    phone: "(605) 409-0358",
+    website: "https://www.plainscommerce.com/community-banking/our-people/devin-malmgren",
+    note: "The loan types, phone number and description above come from Devin Malmgren’s profile page, which is the page Plains Commerce Bank lists the team on. The phone number is the office line on that page. Ask Tanner for his own direct contact details.",
+    infoSource: "plainscommerce.com",
+    infoDate: "November 2026"
+  },
+  {
+    name: "Isaac Gerdes, First PREMIER Bank",
+    category: "Lenders & Mortgage",
+    services: "Mortgage financing, from prequalification to closing",
+    area: "Sioux Falls",
+    about: "As a First PREMIER Mortgage Banker, Isaac can help you find the right financing to make your home happen. From prequalification to closing, Isaac is ready to help answer your questions and ensure the mortgage process runs as smoothly as possible. When he’s not working, you’ll find Isaac enjoying the outdoors and spending time with his family.",
+    offerings: ["Buying or building a home", "Refinancing", "Jumbo mortgage loans", "Professional and physician loan program"],
+    highlights: ["Mortgage Banker, First PREMIER Bank (NMLS #2813966)", "First PREMIER says lending decisions are made locally by people who know you"],
+    address: ["Sioux Falls, SD"],
+    phone: "(605) 978-9789",
+    website: "https://www.firstpremier.com/en/about-us/our-people/banking-teams/mortgage-banking/",
+    note: "The services listed are the mortgage products First PREMIER Bank lists on its website.",
+    infoSource: "firstpremier.com",
+    infoDate: "November 2026"
+  },
+  {
+    name: "Harberts Media",
+    category: "Staging & Photography",
+    services: "Real estate photography, video, drone and 3D tours",
+    area: "Sioux Falls",
+    about: "Harberts Media is a Sioux Falls real estate media company owned by Brendan Harberts. Brendan started the business in 2018, began shooting listing photos for a real estate agency in 2019, and went full time with Harberts Media in July 2020, according to a 2020 Sioux Falls Business profile.",
+    offerings: ["Real estate photography", "Aerial and drone photography", "Real estate video tours", "Real estate videography", "3D tours"],
+    highlights: ["Owner: Brendan Harberts", "Serves the Sioux Falls real estate community, including Keller Williams agents"],
+    address: ["Sioux Falls, SD"],
+    website: "https://www.harbertsmedia.com/",
+    facebook: "https://www.facebook.com/harbertsmedia/",
+    instagram: "https://www.instagram.com/harbertsmedia/",
+    quoteUrl: "https://www.harbertsmedia.com/order",
+    quoteLabel: "Book a shoot",
+    infoSource: "harbertsmedia.com and Sioux Falls Business (September 2020)",
+    infoDate: "November 2026"
+  }
 ];
