@@ -320,6 +320,17 @@ var WEB3FORMS_KEY = "54ef5727-9d0a-4a08-8fc3-3c4fa1a31e29";
     var countEl = document.getElementById('vendor-count');
     var emptyEl = document.getElementById('vendor-empty');
     var active = '';
+    var VLIMIT = 6, expanded = false;
+    var moreWrap = vEl('div', 'vendor-more');
+    var moreBtn = vEl('button', 'btn ghost', '');
+    moreBtn.type = 'button';
+    moreWrap.appendChild(moreBtn);
+    vgrid.parentNode.insertBefore(moreWrap, vgrid.nextSibling);
+    moreBtn.addEventListener('click', function () {
+      expanded = !expanded;
+      render();
+      if (!expanded) vgrid.scrollIntoView({ block: 'start', behavior: 'smooth' });
+    });
 
     var el = vEl, link = function (h, t, x) { return vLink(h, t, x); }, safeUrl = vSafe;
 
@@ -350,7 +361,9 @@ var WEB3FORMS_KEY = "54ef5727-9d0a-4a08-8fc3-3c4fa1a31e29";
         return [v.name, v.category, v.services, v.area, v.note].join(' ').toLowerCase().indexOf(q) !== -1;
       });
       vgrid.innerHTML = '';
-      list.forEach(function (v) {
+      var filtered = !!(q || active);
+      var shown = (filtered || expanded) ? list : list.slice(0, VLIMIT);
+      shown.forEach(function (v) {
         var card = el('article', 'vendor');
         card.appendChild(el('span', 'tag', v.category));
         var h3 = el('h3', ''); h3.appendChild(vLink('vendor.html?v=' + encodeURIComponent(vSlug(v)), v.name)); card.appendChild(h3);
@@ -367,9 +380,12 @@ var WEB3FORMS_KEY = "54ef5727-9d0a-4a08-8fc3-3c4fa1a31e29";
         vgrid.appendChild(card);
       });
 
-      var filtered = !!(q || active);
+      var canToggle = !filtered && list.length > VLIMIT;
+      moreWrap.hidden = !canToggle;
+      moreBtn.textContent = expanded ? 'Show fewer' : 'View more (' + (list.length - VLIMIT) + ' more)';
+      moreBtn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
       if (list.length) {
-        countEl.textContent = 'Showing ' + list.length + ' of ' + vendors.length + ' businesses';
+        countEl.textContent = 'Showing ' + shown.length + ' of ' + vendors.length + ' businesses';
         emptyEl.hidden = true;
       } else {
         countEl.textContent = '';
@@ -380,7 +396,6 @@ var WEB3FORMS_KEY = "54ef5727-9d0a-4a08-8fc3-3c4fa1a31e29";
         document.getElementById('vendor-empty-text').textContent = none
           ? 'I\u2019m adding local businesses to this directory. In the meantime, choose a category above and ask me for a recommendation, and I\u2019ll point you to someone I trust.'
           : 'I may know someone who isn\u2019t listed yet. Ask me and I\u2019ll point you in the right direction.';
-        void filtered;
       }
     }
     var ask = document.getElementById('vendor-ask');
