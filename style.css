@@ -549,3 +549,5 @@ input,select,textarea{border-radius:4px;border-color:#C3CEE0}
 @media(max-width:700px){.page-hero .band.hband{aspect-ratio:780/480;max-height:none;background-image:url(images/banner-homevalue-m.jpg?v=1)}}
 .page-hero .band.tband{height:auto;aspect-ratio:1496/280;max-height:360px;background-image:url(images/banner-testimonials.jpg?v=1);background-size:cover}
 @media(max-width:700px){.page-hero .band.tband{aspect-ratio:780/480;max-height:none;background-image:url(images/banner-testimonials-m.jpg?v=1)}}
+.page-hero .band.rband{height:auto;aspect-ratio:1496/280;max-height:360px;background-image:url(images/banner-rentbuy.jpg?v=2);background-size:cover}
+@media(max-width:700px){.page-hero .band.rband{aspect-ratio:780/480;max-height:none;background-image:url(images/banner-rentbuy-m.jpg?v=2)}}
