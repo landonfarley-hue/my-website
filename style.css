@@ -545,3 +545,5 @@ input,select,textarea{border-radius:4px;border-color:#C3CEE0}
 .vendor-more[hidden]{display:none}
 .page-hero .band.vband{height:auto;aspect-ratio:1496/280;max-height:360px;background-image:url(images/banner-vendors.jpg?v=3);background-size:cover}
 @media(max-width:700px){.page-hero .band.vband{aspect-ratio:780/480;max-height:none;background-image:url(images/banner-vendors-m.jpg?v=3)}}
+.page-hero .band.hband{height:auto;aspect-ratio:1496/280;max-height:360px;background-image:url(images/banner-homevalue.jpg?v=1);background-size:cover}
+@media(max-width:700px){.page-hero .band.hband{aspect-ratio:780/480;max-height:none;background-image:url(images/banner-homevalue-m.jpg?v=1)}}
